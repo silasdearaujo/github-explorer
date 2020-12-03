@@ -1,18 +1,34 @@
-import React from 'react';
+import React, { useState, FormEvent } from 'react';
 import { FiChevronRight } from 'react-icons/fi'
+import api from '../../services/api'
 
 import { Title, Form, Repositories } from './styles';
 
 import logoImg from '../../assets/logo.svg';
 
 const Dashboard: React.FC = () => {
+  const [newRepo, setNewRepo] = useState('');
+  const [repositories, setRepositories] = useState([]);
+
+  async function handleAddRepository(event: FormEvent<HTMLFormElement>): Promise<void>{
+    event.preventDefault();
+    console.log('newRepo');
+    const response = await api.get(`repos/${newRepo}`);
+
+    console.log(response);
+    
+  }
+  
   return (
     <>
       <img src={logoImg} alt="Github Explorer"/>
       <Title>Explore repositórios do Github</Title>
 
-      <Form>
-        <input placeholder="Digite o nome do repositório"/>
+      <Form onSubmit={handleAddRepository}>
+        <input 
+        value = {newRepo}
+        onChange={(e) => setNewRepo(e.target.value)}
+        placeholder="Digite o nome do repositório"/>
         <button type="submit">Pesquisar</button>
       </Form>
 
@@ -26,9 +42,8 @@ const Dashboard: React.FC = () => {
             <strong>silasdearaujo</strong>
             <p>Github explorer</p>
         </div>
-
-        <FiChevronRight size={20}/>
-        </a>        
+        <FiChevronRight size={30}/>
+        </a>            
       </Repositories>
     </>
   );
